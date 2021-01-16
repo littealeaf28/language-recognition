@@ -5,19 +5,39 @@ import pandas as pd
 import time
 
 
-def get_data_link(option, _inner_container):
+def get_size_mb(_driver):
+    facts_container = _driver.find_element_by_css_selector("ul.facts")
+    facts_elements = facts_container.find_elements_by_css_selector("li")
+    size_container = facts_elements[1].find_element_by_css_selector("span.value")
+
+    size = size_container.text
+    size_val = int(size[:-3])
+
+    if size[-2:] == "GB":
+        return size_val * 1000
+    else:
+        return size_val
+
+
+def get_data_link(option, _inner_container, _driver):
     option.click()
+
+    print(f'Processing {option.text}...')
+
+    # Get listed size
+    size_mb = get_size_mb(_driver)
 
     # Get download link
     time.sleep(3)
     download_btn = _inner_container.find_element_by_css_selector("a.button.rounded.download-language")
-    return [option.text, download_btn.get_attribute('href')]
+
+    return [option.text, size_mb, download_btn.get_attribute('href'), False]
 
 
 data_site = "https://commonvoice.mozilla.org/en/datasets"
 
 options = Options()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),
                           options=options)
 
@@ -42,7 +62,12 @@ select = driver.find_element_by_css_selector("select[name='bundleLocale']")
 options = select.find_elements_by_css_selector("option")
 
 # Get download links for each option
-data_links = [get_data_link(option, inner_container) for option in options]
+data_links = [get_data_link(option, inner_container, driver) for option in options]
+# data_links = [get_data_link(option, inner_container, driver) for idx, option in enumerate(options) if idx < 3]
 
-df = pd.DataFrame(data_links, columns=["Language", "Data Link"])
-df.to_csv('data_links.csv')
+df = pd.DataFrame(data_links, columns=["Language", "Size (MB)", "Data Link", "Downloaded"])
+df.to_csv('data_links.csv', index=False)
+
+print('Finished saving links')
+
+driver.quit()
