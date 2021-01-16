@@ -1,1 +1,9 @@
 .idea
+
+retrieve_sandbox.py
+
+data_links.csv
+
+cv-corpus-6.1-2020-12-11
+*.tar
+debug.log
