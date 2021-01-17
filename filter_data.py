@@ -1,8 +1,14 @@
 import tarfile
+import os
+from glob import glob
 
-raw_data_path = 'a.tar'
+raw_data_files = glob('*.tar')
 
-# print('zh-CN.tar', tarfile.is_tarfile('zh-CN.tar'))
+for raw_data_file in raw_data_files:
+    print(f'Extracting {raw_data_file}...')
 
-t = tarfile.open(raw_data_path, 'r')
-t.extractall()
+    t = tarfile.open(raw_data_file, 'r')
+    t.extractall()
+    t.close()
+
+    os.remove(raw_data_file)
