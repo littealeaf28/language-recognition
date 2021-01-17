@@ -19,10 +19,10 @@ def get_size_mb(_driver):
         return size_val
 
 
-def get_data_link(option, _inner_container, _driver):
-    option.click()
+def get_row_data(_option, _inner_container, _driver):
+    _option.click()
 
-    print(f'Processing {option.text}...')
+    print(f'Processing {_option.text}...')
 
     # Get listed size
     size_mb = get_size_mb(_driver)
@@ -31,7 +31,19 @@ def get_data_link(option, _inner_container, _driver):
     time.sleep(3)
     download_btn = _inner_container.find_element_by_css_selector("a.button.rounded.download-language")
 
-    return [option.text, size_mb, download_btn.get_attribute('href'), False]
+    return [_option.text, size_mb, download_btn.get_attribute('href'), False]
+
+
+def get_data_link(_option, _inner_container):
+    _option.click()
+
+    print(f'Processing {_option.text}...')
+
+    # Get download link
+    time.sleep(3)
+    download_btn = _inner_container.find_element_by_css_selector("a.button.rounded.download-language")
+
+    return download_btn.get_attribute('href')
 
 
 data_site = "https://commonvoice.mozilla.org/en/datasets"
@@ -61,11 +73,20 @@ driver.execute_script("arguments[0].click()", confirm_no_identify)
 select = driver.find_element_by_css_selector("select[name='bundleLocale']")
 options = select.find_elements_by_css_selector("option")
 
-# Get download links for each option
-data_links = [get_data_link(option, inner_container, driver) for option in options]
-# data_links = [get_data_link(option, inner_container, driver) for idx, option in enumerate(options) if idx < 3]
+# Initialize data frame if don't already have .csv file
+# data_links = [get_row_data(option, inner_container, driver) for option in options]
 
-df = pd.DataFrame(data_links, columns=["Language", "Size (MB)", "Data Link", "Downloaded"])
+# df = pd.DataFrame(data_links, columns=["Language", "Size (MB)", "Data Link", "Downloaded"])
+
+# Load in data frame if have .csv file
+df = pd.read_csv('data_links.csv')
+
+# Update download links since they expire
+for idx, option in enumerate(options):
+    # If haven't downloaded the given option, retrieve its data link
+    if ~df.iloc[idx].loc['Downloaded']:
+        df.loc[idx, 'Data Link'] = get_data_link(option, inner_container)
+
 df.to_csv('data_links.csv', index=False)
 
 print('Finished saving links')

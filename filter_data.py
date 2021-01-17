@@ -1,6 +1,6 @@
 import tarfile
 
-raw_data_path = 'ja.tar'
+raw_data_path = 'a.tar'
 
 # print('zh-CN.tar', tarfile.is_tarfile('zh-CN.tar'))
 
