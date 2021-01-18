@@ -1,6 +1,7 @@
 import tarfile
 import requests
 import pandas as pd
+import os
 
 df = pd.read_csv('data_links.csv')
 
@@ -27,13 +28,15 @@ for idx, row in df.iterrows():
 
     print(f"Writing {row.loc['Language']}")
 
-    download_file_name = f"{row.loc['Language'][:3]}.tar"
+    download_file_name = f"{row.loc['']}.tar"
 
     open(download_file_name, 'wb').write(r.content)
 
     t = tarfile.open(download_file_name, 'r')
     t.extractall()
     t.close()
+
+    os.remove(download_file_name)
 
     df.loc[idx, 'Downloaded'] = True
     curr_size_mb += row.loc['Size (MB)']
