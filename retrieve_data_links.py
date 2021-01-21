@@ -74,18 +74,18 @@ select = driver.find_element_by_css_selector("select[name='bundleLocale']")
 options = select.find_elements_by_css_selector("option")
 
 # Initialize data frame if don't already have .csv file
-# data_links = [get_row_data(option, inner_container, driver) for option in options]
+data_links = [get_row_data(option, inner_container, driver) for option in options]
 
-# df = pd.DataFrame(data_links, columns=["Language", "Size (MB)", "Data Link", "Downloaded"])
+df = pd.DataFrame(data_links, columns=["Language", "Size (MB)", "Data Link", "Downloaded"])
 
-# Load in data frame if have .csv file
-df = pd.read_csv('data_links.csv')
-
-# Update download links since they expire
-for idx, option in enumerate(options):
-    # If haven't downloaded the given option, retrieve its data link
-    if ~df.iloc[idx].loc['Downloaded']:
-        df.loc[idx, 'Data Link'] = get_data_link(option, inner_container)
+# # Load in data frame if have .csv file
+# df = pd.read_csv('data_links.csv')
+#
+# # Update download links since they expire
+# for idx, option in enumerate(options):
+#     # If haven't downloaded the given option, retrieve its data link
+#     if ~df.iloc[idx].loc['Downloaded']:
+#         df.loc[idx, 'Data Link'] = get_data_link(option, inner_container)
 
 df.to_csv('data_links.csv', index=False)
 

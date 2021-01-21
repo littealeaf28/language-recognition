@@ -5,14 +5,17 @@ import os
 
 df = pd.read_csv('data_links.csv')
 
-df = df[~df['Downloaded']]
+# df = df[~df['Downloaded']]
 
-download_lim_mb = 10000
+download_lim_mb = 2000
 
 curr_size_mb = 0
 
 # Iterate through df rows to find languages that haven't yet been downloaded and ensure a reasonable
 for idx, row in df.iterrows():
+    if row.loc['Downloaded']:
+        continue
+
     # Only want to download a certain amount so don't overload computer storage
     if row.loc['Size (MB)'] + curr_size_mb > download_lim_mb:
         print(f"Skipping {row.loc['Language']}")
@@ -28,7 +31,7 @@ for idx, row in df.iterrows():
 
     print(f"Writing {row.loc['Language']}")
 
-    download_file_name = f"{row.loc['']}.tar"
+    download_file_name = f"{row.loc['Label']}.tar"
 
     open(download_file_name, 'wb').write(r.content)
 
@@ -40,3 +43,5 @@ for idx, row in df.iterrows():
 
     df.loc[idx, 'Downloaded'] = True
     curr_size_mb += row.loc['Size (MB)']
+
+df.to_csv('data_links.csv', index=False)
