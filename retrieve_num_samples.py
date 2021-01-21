@@ -10,10 +10,7 @@ max_lang_files_size = 18
 
 df = pd.read_csv('data_links.csv')
 
-for idx, lang_dir in enumerate(lang_dirs):
-    if idx >= 24:
-        break
-
+for lang_dir in lang_dirs:
     label = lang_dir[25:]
 
     if ~np.isnan(df.loc[df['Label'] == label, 'Num Samples'].values[0]):
