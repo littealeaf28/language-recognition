@@ -6,7 +6,7 @@ import numpy as np
 lang_dirs = glob('cv-corpus-6.1-2020-12-11\\*')
 
 b_in_mb = 2**20
-max_lang_files_size = 18
+max_lang_mp3_size = 18
 
 df = pd.read_csv('data_links.csv')
 
@@ -27,7 +27,7 @@ for lang_dir in lang_dirs:
     total_size_mb = total_size_b / b_in_mb
     avg_size_mb = total_size_mb / len(mp3_files)
 
-    num_wav_files = round(max_lang_files_size / avg_size_mb) + 1
+    num_wav_files = round(max_lang_mp3_size / avg_size_mb) + 1
 
     df.loc[df['Label'] == label, 'Num Samples'] = num_wav_files
 
