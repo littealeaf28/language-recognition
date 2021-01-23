@@ -4,6 +4,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 import time
 
+# from selenium.webdriver.support.wait import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.common.by import By
+
 
 def get_size_mb(_driver):
     facts_container = _driver.find_element_by_css_selector("ul.facts")
@@ -60,13 +64,16 @@ inner_container = driver.find_element_by_css_selector("div.inner")
 email_download_btn = inner_container.find_element_by_css_selector("button.button.rounded.show-email-form")
 driver.execute_script("arguments[0].click()", email_download_btn)
 
-confirm_size = inner_container.find_element_by_css_selector("test_audios[name='confirmSize']")
+# WebDriverWait(driver, 10).until(
+#     EC.element_to_be_clickable((By.CSS_SELECTOR, "test_audios[name='confirmSize']"))
+# )
+confirm_size = inner_container.find_element_by_css_selector("input[name='confirmSize']")
 driver.execute_script("arguments[0].click()", confirm_size)
 
-email_input = inner_container.find_element_by_css_selector("label.labeled-form-control.for-test_audios")
+email_input = inner_container.find_element_by_css_selector("input#download-email")
 email_input.send_keys("lit1@ufl.edu")
 
-confirm_no_identify = inner_container.find_element_by_css_selector("test_audios[name='confirmNoIdentify']")
+confirm_no_identify = inner_container.find_element_by_css_selector("input[name='confirmNoIdentify']")
 driver.execute_script("arguments[0].click()", confirm_no_identify)
 
 # Find options to iterate through
