@@ -13,7 +13,10 @@ def get_nonsilence_audio(_df, label):
     print(f'Processing {label}...')
 
     # Removes all silence before and after speak
-    for mp3_file in mp3_files:
+    for idx, mp3_file in enumerate(mp3_files):
+        if idx % notif_iter == 0:
+            print(f'Reached iteration {idx} of {label}...')
+
         mp3_audio = AudioSegment.from_mp3(mp3_file)
 
         nonsilent_audio_idcs = detect_nonsilent(mp3_audio, min_silence_len=int(0.05 * len(mp3_audio)),
@@ -21,7 +24,7 @@ def get_nonsilence_audio(_df, label):
 
         if len(nonsilent_audio_idcs) == 0:
             print(f'Check {mp3_file}...')
-            break
+            continue
 
         last_idc = len(nonsilent_audio_idcs) - 1
         nonsilent_slice = [nonsilent_audio_idcs[0][0], nonsilent_audio_idcs[last_idc][1]]
@@ -35,8 +38,10 @@ def get_nonsilence_audio(_df, label):
     _df.to_csv('data_links.csv', index=False)
 
 
+notif_iter = 200
+
 lang_dirs = glob('cv-corpus-6.1-2020-12-11\\*')
-lang_dirs = lang_dirs[:1]
+lang_dirs = lang_dirs[:2]
 
 df = pd.read_csv('data_links.csv')
 

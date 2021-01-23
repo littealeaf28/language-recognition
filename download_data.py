@@ -7,7 +7,7 @@ df = pd.read_csv('data_links.csv')
 
 # df = df[~df['Downloaded']]
 
-download_lim_mb = 3000
+download_lim_mb = 70
 
 curr_size_mb = 0
 

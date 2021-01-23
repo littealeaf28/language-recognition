@@ -11,9 +11,9 @@ def clear_unprocessed_samples(label):
 
 lang_dirs = glob('cv-corpus-6.1-2020-12-11\\*')
 
-df = pd.read_csv('data_links.csv')
+# df = pd.read_csv('data_links.csv')
 # df = df.drop(columns=['Num Samples', 'Sample Size', 'Finished Sampling'])
 
 [clear_unprocessed_samples(lang_dir[25:]) for lang_dir in lang_dirs]
 
-df.to_csv('data_links.csv', index=False)
+# df.to_csv('data_links.csv', index=False)

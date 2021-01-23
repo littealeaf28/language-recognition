@@ -60,13 +60,13 @@ inner_container = driver.find_element_by_css_selector("div.inner")
 email_download_btn = inner_container.find_element_by_css_selector("button.button.rounded.show-email-form")
 driver.execute_script("arguments[0].click()", email_download_btn)
 
-confirm_size = inner_container.find_element_by_css_selector("input[name='confirmSize']")
+confirm_size = inner_container.find_element_by_css_selector("test_audios[name='confirmSize']")
 driver.execute_script("arguments[0].click()", confirm_size)
 
-email_input = inner_container.find_element_by_css_selector("label.labeled-form-control.for-input")
+email_input = inner_container.find_element_by_css_selector("label.labeled-form-control.for-test_audios")
 email_input.send_keys("lit1@ufl.edu")
 
-confirm_no_identify = inner_container.find_element_by_css_selector("input[name='confirmNoIdentify']")
+confirm_no_identify = inner_container.find_element_by_css_selector("test_audios[name='confirmNoIdentify']")
 driver.execute_script("arguments[0].click()", confirm_no_identify)
 
 # Find options to iterate through
