@@ -37,7 +37,7 @@ def get_wav_samples(_df, label):
 
 
 lang_dirs = glob('cv-corpus-6.1-2020-12-11\\*')
-lang_dirs = lang_dirs[:7]
+lang_dirs = lang_dirs[:20]
 
 b_in_mb = 2**20
 max_lang_wav_size = 216
