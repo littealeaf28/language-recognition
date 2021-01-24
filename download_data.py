@@ -7,7 +7,7 @@ df = pd.read_csv('data_links.csv')
 
 # df = df[~df['Downloaded']]
 
-download_lim_mb = 3000
+download_lim_mb = 80
 
 curr_size_mb = 0
 
@@ -44,6 +44,6 @@ for idx, row in df.iterrows():
     df.loc[idx, 'Downloaded'] = True
     curr_size_mb += row.loc['Size (MB)']
 
-print(df)
+# print(df)
 
 df.to_csv('data_links.csv', index=False)

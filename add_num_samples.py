@@ -13,22 +13,16 @@ df = pd.read_csv('data_links.csv')
 for lang_dir in lang_dirs:
     label = lang_dir[25:]
 
-    if ~np.isnan(df.loc[df['Label'] == label, 'Num Samples'].values[0]):
+    if ~np.isnan(df.loc[df['Label'] == label, 'Num Possible Samples'].values[0]):
         continue
 
     print(f'Processing {label}...')
 
     mp3_files = glob(f'{lang_dir}\\clips\\*.mp3')
 
-    total_size_b = 0
-    for mp3_file in mp3_files:
-        total_size_b += os.path.getsize(mp3_file)
-
-    total_size_mb = total_size_b / b_in_mb
+    total_size_mb = sum([os.path.getsize(mp3_file) for mp3_file in mp3_files]) / b_in_mb
     avg_size_mb = total_size_mb / len(mp3_files)
 
-    num_wav_files = round(max_lang_mp3_size / avg_size_mb) + 1
-
-    df.loc[df['Label'] == label, 'Num Samples'] = num_wav_files
+    df.loc[df['Label'] == label, 'Num Possible Samples'] = round(max_lang_mp3_size / avg_size_mb)
 
 df.to_csv('data_links.csv', index=False)
