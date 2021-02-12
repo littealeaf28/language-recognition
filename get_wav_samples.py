@@ -41,6 +41,8 @@ def get_wav_samples(_df, label):
     print(f'Generating WAV samples for {label}...')
 
     sample_sel = round(len(mp3_files)/pos_num_samples)
+    if sample_sel == 0:
+        sample_sel = 1
 
     for idx, mp3_file in enumerate(mp3_files):
         if sample_size_mb > max_lang_wav_size:
@@ -69,10 +71,10 @@ def get_wav_samples(_df, label):
 
 b_in_mb = 2**20
 max_lang_wav_size = 216
-notif_iter = 50
+notif_iter = 100
 
 lang_dirs = glob('cv-corpus-6.1-2020-12-11\\*')
-lang_dirs = lang_dirs[:6]
+# lang_dirs = lang_dirs[:14]
 
 df = pd.read_csv('data_links.csv')
 

@@ -11,11 +11,9 @@ def get_true_sample_size(_df, label):
 
 
 b_in_mb = 2**20
-max_lang_wav_size = 216
 
 df = pd.read_csv('data_links.csv')
 
-samp_df = df.loc[df['Sample Size'] > max_lang_wav_size]
-[get_true_sample_size(df, label) for label in samp_df['Label'].values]
+[get_true_sample_size(df, label) for label in df['Label'].values]
 
 df.to_csv('data_links.csv', index=False)

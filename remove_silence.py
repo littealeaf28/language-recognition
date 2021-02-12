@@ -19,6 +19,7 @@ def get_nonsilence_audio(_df, label):
 
         mp3_audio = AudioSegment.from_mp3(mp3_file)
 
+        # TODO: Remove based on relative silence
         nonsilent_audio_idcs = detect_nonsilent(mp3_audio, min_silence_len=int(0.05 * len(mp3_audio)),
                                                 silence_thresh=-60)
 
