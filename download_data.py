@@ -3,47 +3,43 @@ import requests
 import pandas as pd
 import os
 
-df = pd.read_csv('data_links.csv')
 
-# df = df[~df['Downloaded']]
+def download_data_link(_df, lang_data, idx, _curr_size_mb):
+    if lang_data.loc['Downloaded']:
+        return
 
-download_lim_mb = 16000
+    if lang_data.loc['Size (MB)'] + _curr_size_mb > download_lim_mb:
+        print(f"Skipping {lang_data.loc['Language']}")
+        return
 
-curr_size_mb = 0
-
-# Iterate through df rows to find languages that haven't yet been downloaded and ensure a reasonable
-for idx, row in df.iterrows():
-    if row.loc['Downloaded']:
-        continue
-
-    # Only want to download a certain amount so don't overload computer storage
-    if row.loc['Size (MB)'] + curr_size_mb > download_lim_mb:
-        print(f"Skipping {row.loc['Language']}")
-        continue
-
-    print(f"Retrieving {row.loc['Language']}")
-    r = requests.get(row.loc['Data Link'], allow_redirects=True)
+    print(f"Retrieving {lang_data.loc['Language']}")
+    r = requests.get(lang_data.loc['Data Link'], allow_redirects=True)
 
     # Download links expired, so must re-download
     if r.status_code != 200:
-        print(f"Must re-download {row.loc['Language']}")
-        continue
+        print(f"Must re-download {lang_data.loc['Language']}")
+        return
 
-    print(f"Writing {row.loc['Language']}")
+    print(f"Writing {lang_data.loc['Language']}")
+    download_archive = f"{lang_data.loc['Label']}.tar"
+    open(download_archive, 'wb').write(r.content)
 
-    download_file_name = f"{row.loc['Label']}.tar"
-
-    open(download_file_name, 'wb').write(r.content)
-
-    t = tarfile.open(download_file_name, 'r')
+    t = tarfile.open(download_archive, 'r')
     t.extractall()
     t.close()
 
-    os.remove(download_file_name)
+    os.remove(download_archive)
 
-    df.loc[idx, 'Downloaded'] = True
-    curr_size_mb += row.loc['Size (MB)']
+    _df.loc[idx, 'Downloaded'] = True
+    _curr_size_mb += lang_data.loc['Size (MB)']
 
-# print(df)
+
+df = pd.read_csv('data_links.csv')
+
+# Set limit because only want to download a certain amount so don't overload computer storage
+download_lim_mb = 400
+curr_size_mb = 0
+
+[download_data_link(df, lang_data, idx, curr_size_mb) for idx, lang_data in df.iterrows()]
 
 df.to_csv('data_links.csv', index=False)
